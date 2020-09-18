@@ -1,0 +1,45 @@
+package KotlinSamples.Aggregation
+
+import java.lang.Math.pow
+
+// reduce and fold
+fun main(args: Array<String>)
+{
+    var numbers = generateSequence(1, {it+1}).take(10).toList()
+    println(numbers)
+
+    println(numbers.joinToString("->"))
+
+    println("sum (reduce) = ${numbers.reduce{x,y -> x+y }}")
+    println("\nproduct (reduce) = ${numbers.reduceRight{x,y ->
+        print("($x * $y)")
+        x*y
+    }}")
+
+    println("sum = ${numbers.sum()}")
+    println("average = ${numbers.average()}")
+    println("sum of squares = ${numbers.sumBy { it*it }}")
+    println("sum of roots = ${numbers.sumByDouble { Math.sqrt(it.toDouble()) }}") // sumBy
+
+    println("sum (fold) = ${numbers.fold(0, {x,y -> x+y})}") // additive identity
+    println("product (fold) = ${numbers.fold(1, {x,y -> x*y})}") // multiplicative identity
+
+    var three = numbers.take(3)
+
+    // polynomial with x = 3 and coeffs = 1,2,3
+    // ax^2+bx+c = 1*3^2 + 2*3 + 3 = 9 + 6 + 3 = 18
+
+    println("poly = ${three.foldIndexed(0, {i, p, c ->
+        val xp = pow(3.0, (2-i).toDouble()).toInt()
+        //println("i = $i xp = $xp c = $c")
+        c * xp + p
+        })}")
+
+    // 1,2,3, square value, add to next
+    // ((1^2 + 2)^2 + 3)^2 = 144
+    // ((3^2 + 2)^2 + 1)^2 is the same as
+    //   (1 + (2 + (3^2))^2)^2 =122^2 = 14884
+
+    println("${three.fold(0, {p, x -> (p+x)*(p+x) })}")
+    println("${three.foldRight(0, {p, x -> (p+x)*(p+x) })}")
+}

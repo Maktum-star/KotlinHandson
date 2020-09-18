@@ -1,0 +1,33 @@
+package KotlinSamples.Sorting
+
+import kotlin.comparisons.compareBy
+import kotlin.comparisons.thenByDescending
+
+data class Person(var name:String, var age:Int)
+
+fun main(args: Array<String>) {
+    val rand = java.util.Random()
+    val randomValues = generateSequence { rand.nextInt(10) - 5 }.take(10).toList()
+
+    println(randomValues)
+    println(randomValues.sorted()) // by itself
+    println(randomValues.sortedDescending())
+
+    var people = listOf(
+            Person("Adam", 36),
+            Person("Boris", 18),
+            Person("Claire", 36),
+            Person("Adam", 20),
+            Person("Jack", 20)
+    )
+
+    println(people)
+    println(people.sortedBy { it.name })
+
+    // sort by age, then by name (or vise versa)
+    println(people.sortedWith(compareBy(Person::age, Person::name)))
+    println(people.sortedWith(compareBy({it.name}, {it.age})))
+
+    // by age, then by name descending
+    println(people.sortedWith(compareBy<Person>{it.age}.thenByDescending { it.name }))
+}

@@ -1,0 +1,44 @@
+package KotlinSamples.Reflection.PropertyReferenes
+
+import java.lang.reflect.Field
+import java.lang.reflect.Method
+import kotlin.reflect.jvm.javaField
+import kotlin.reflect.jvm.javaGetter
+
+var x = 1
+val y = 22
+
+class Person(var age: Int)
+
+// extension property
+val String.lastChar : Char
+  get() = this[length - 1]
+
+fun main(args: Array<String>)
+{
+  // only works on globals
+  println(::x.get())
+  ::x.set(3)
+  println(x)
+
+  println(::y.get())
+  // not valid
+  //::y.set(23)
+
+  // members
+  val strings = "this is fun".split(' ')
+  println(strings.map(String::length))
+
+  var person = Person(33)
+
+  var age = Person::age
+  println(age.get(person))
+
+  // works with extension properties
+  var ls = String::lastChar
+  println(ls.get("hello"))
+
+  // java reflection interop
+  var javaGetter: Method? = Person::age.javaGetter
+  var field: Field? = Person::age.javaField
+}
